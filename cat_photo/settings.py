@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "upload",    # added
     "history",   # added
     "rest_framework",  # added
+    "rest_framework.authtoken",  #
+
 ]
 
 MIDDLEWARE = [

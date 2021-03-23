@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "signup",    # added
-    "login",     # added
     "upload",    # added
     "history",   # added
     "rest_framework",  # added

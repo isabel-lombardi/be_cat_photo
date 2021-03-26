@@ -146,11 +146,13 @@ STATIC_URL = '/static/'
 CORS_ALLOWED_ORIGINS = [
     "https://www.test-cors.org",
     'https://cat-photo.netlify.app/',
+    'https://cat-photo.netlify.app/signup',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'www.test-cors.org',
     'https://cat-photo.netlify.app/',
+    'https://cat-photo.netlify.app/signup',
 ]
 
 CORS_ALLOW_CREDENTIALS = True

@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
-
+import dj_database_url
 # configure Django App for Heroku
 import django_heroku
 
@@ -26,15 +26,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = config('SECRET_KEY')     ########
-# SECRET_KEY = os.environ['SECRET_KEY']
+
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'czkl$o8@l&x1hc7n!ds=%acjhc-p7$j8p(v02l4m6ml%(g1#)4')
 
-# SECRET_KEY = os.getenv('SECRET_KEY')   #########
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
-DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+# DEBUG = True
+# DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+DEBUG = False
 
 
 ALLOWED_HOSTS = []
@@ -155,7 +154,14 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 django_heroku.settings(locals())
 
 # Heroku: Update database configuration from $DATABASE_URL.
-import dj_database_url
+
+SECURE_SSL_REDIRECT = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_HSTS_SECONDS = 3600
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
 
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)

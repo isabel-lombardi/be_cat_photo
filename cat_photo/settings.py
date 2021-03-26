@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     "account",  # added
     "upload",  # added
     "history",  # added
@@ -70,6 +71,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',   #####
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -169,3 +171,16 @@ SECURE_HSTS_PRELOAD = True
 
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
+
+
+CORS_ALLOWED_ORIGINS = [
+    "https://www.test-cors.org",
+    "https://cat-photo.netlify.app/",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'www.test-cors.org',
+    "https://cat-photo.netlify.app/",
+]
+
+CORS_ALLOW_CREDENTIALS = True

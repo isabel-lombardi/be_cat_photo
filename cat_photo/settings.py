@@ -16,22 +16,28 @@ import os
 # configure Django App for Heroku
 import django_heroku
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-# BASE_DIR = Path(__file__).resolve().parent.parent
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) ##
+from dj_database_url import config
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) ##
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SECRET_KEY']
+# SECRET_KEY = config('SECRET_KEY')     ########
+# SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'czkl$o8@l&x1hc7n!ds=%acjhc-p7$j8p(v02l4m6ml%(g1#)4')
+
+# SECRET_KEY = os.getenv('SECRET_KEY')   #########
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -42,9 +48,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "account",    # added
-    "upload",    # added
-    "history",   # added
+    "account",  # added
+    "upload",  # added
+    "history",  # added
     "rest_framework",  # added
     "rest_framework.authtoken",  #
 
@@ -59,6 +65,7 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',   #####
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -87,7 +94,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cat_photo.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
@@ -97,7 +103,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -117,7 +122,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -131,16 +135,27 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# The absolute path to the directory where collectstatic will collect static files for deployment.
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # os.path.join(BASE_DIR, 'staticfiles')
 
 STATIC_URL = '/static/'
 
+# Simplified static file serving.
+# https://warehouse.python.org/project/whitenoise/
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Extra places for collectstatic to find static files.
-STATICFILES_DIRS = (
+"""STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
-
+"""
 django_heroku.settings(locals())
+
+# Heroku: Update database configuration from $DATABASE_URL.
+import dj_database_url
+
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)

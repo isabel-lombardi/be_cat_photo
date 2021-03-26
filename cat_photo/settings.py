@@ -57,6 +57,10 @@ REST_FRAMEWORK = {
     ]
 }
 
+# where the uploaded image files will be saved and from which URL they can be served
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

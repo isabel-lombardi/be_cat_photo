@@ -175,12 +175,12 @@ DATABASES['default'].update(db_from_env)
 
 CORS_ALLOWED_ORIGINS = [
     "https://www.test-cors.org",
-    "https://cat-photo.netlify.app/",
+    "https://cat-photo.netlify.app",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'www.test-cors.org',
-    "https://cat-photo.netlify.app/",
+    "https://cat-photo.netlify.app",
 ]
 
 CORS_ALLOW_CREDENTIALS = True

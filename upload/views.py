@@ -21,7 +21,7 @@ class UploadAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
         # serializer
-        serializer = ImageSerializer(data=request.data)  # handle incoming json requests
+        serializer = ImageSerializer(data=request.data, instance=request.user)  # handle incoming json requests
 
         # request.FILES is a MultiValueDict
         files = request.FILES.getlist("image")   # .getlist("") to get multiple files

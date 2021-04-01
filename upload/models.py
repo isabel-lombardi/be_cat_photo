@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from PIL import Image as pilImg
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -35,3 +36,14 @@ class Image(models.Model):
 
     def __str__(self):
         return self.image.name
+
+    def save(self, *args, **kwargs):
+        if self.image:
+            super().save()  # saving image first
+
+            img = pilImg.open(self.image.path)  # Open image using self
+
+            if img.height > 300 or img.width > 300:
+                new_img = (300, 300)
+                img.thumbnail(new_img)
+                img.save(self.image.path)  # saving image at the same path

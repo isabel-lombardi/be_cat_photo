@@ -29,6 +29,10 @@ class UploadAPIView(APIView):
         # validate the input data and confirm that all required fields are correct
         if serializer.is_valid():
 
+
+            # to do custom processing on the object before saving it
+            obj = serializer.save(user=request.user)
+
             # list with all the images present in the request
             images = [f for f in files]
 
@@ -41,6 +45,7 @@ class UploadAPIView(APIView):
             classification_result = classification.use_template()
 
             serializer.save(user=request.user, result=classification_result)
+
 
             return Response(classification_result, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -30,9 +30,6 @@ class UploadAPIView(APIView):
         if serializer.is_valid():
 
 
-            # to do custom processing on the object before saving it
-            obj = serializer.save(user=request.user)
-
             # list with all the images present in the request
             images = [f for f in files]
 

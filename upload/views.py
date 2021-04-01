@@ -5,9 +5,19 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser
 from rest_framework import status
 from .serializers import ImageSerializer
-
+from PIL import Image
 
 from upload.classification.classification import Classification
+
+
+def is_allowed_format(image_file):
+    try:
+        img = Image.open(image_file)
+        print(img.format)
+        return img.format in ['JPEG', 'PNG']
+    except OSError:
+        print('cannot open', image_file)
+        return False
 
 
 class UploadAPIView(APIView):
@@ -29,7 +39,6 @@ class UploadAPIView(APIView):
         # validate the input data and confirm that all required fields are correct
         if serializer.is_valid():
 
-
             # list with all the images present in the request
             images = [f for f in files]
 
@@ -37,12 +46,14 @@ class UploadAPIView(APIView):
             if len(images) > 10:
                 return Response("No more than 10 images allowed", status=status.HTTP_400_BAD_REQUEST)
 
+            if not all([is_allowed_format(img) for img in images]):
+                return Response("Only Jpg and Png formats allowed", status=status.HTTP_400_BAD_REQUEST)
+
             # return classification result
             classification = Classification(images)
             classification_result = classification.use_template()
 
             serializer.save(user=request.user, result=classification_result)
-
 
             return Response(classification_result, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

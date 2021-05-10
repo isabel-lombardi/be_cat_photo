@@ -21,13 +21,17 @@ class UploadAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
         # serializer
-        serializer = ImageSerializer(data=request.data)  # handle incoming json requests
+        serializer = ImageSerializer(data=request.data, instance=request.user)  # handle incoming json requests
+
+       # serializer = ImageSerializer(data=request.data)  # handle incoming json requests
 
         # request.FILES is a MultiValueDict
         files = request.FILES.getlist("image")   # .getlist("") to get multiple files
 
         # validate the input data and confirm that all required fields are correct
         if serializer.is_valid():
+            obj = serializer.save()  ##
+
 
 
             # list with all the images present in the request
@@ -39,10 +43,14 @@ class UploadAPIView(APIView):
 
             # return classification result
             classification = Classification(images)
-            classification_result = classification.use_template()
+            obj.result = classification.use_template()
+           # classification_result = classification.use_template()
+            serializer.save()
 
-            serializer.save(user=request.user, result=classification_result)
 
+            #serializer.save(user=request.user, result=classification_result)
 
-            return Response(classification_result, status=status.HTTP_201_CREATED)
+            return Response(obj.result, status=status.HTTP_201_CREATED)
+
+          #  return Response(classification_result, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

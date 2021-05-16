@@ -17,7 +17,9 @@ from django.contrib import admin
 from django.urls import path
 from account.views import SignupAPIView, LogoutAPIView
 from upload.views import UploadAPIView
-
+from history.views import ImageList  # , ImageUserView
+from django.conf import settings
+from django.conf.urls.static import static
 from rest_framework.authtoken.views import obtain_auth_token
 
 
@@ -31,5 +33,9 @@ urlpatterns = [
     path("login/", obtain_auth_token, name="login"),
     path("logout/", LogoutAPIView.as_view(), name="logout"),
     path("upload/", UploadAPIView.as_view(), name="upload"),
+    path("history/", ImageList.as_view(), name="history"),
+    # path("history2/", ImageUserView.as_view(), name="history2"),
 
 ]
+# To make the URLs of the images accessible.
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
